@@ -15,6 +15,16 @@ All dataset are within dannys_dinner schema whhich includes:
 
 sales Table
 
+This table capture all customer purchases, corresponding order_date and prodcut_di
+![image](https://github.com/gleidyalonzo/SQL_challenges/assets/95588335/82378738-4802-4469-910c-97d1488881ce)
+
 menu Table
 
-Members Table
+This table capture the produc_id, to the produc_name and price
+![image](https://github.com/gleidyalonzo/SQL_challenges/assets/95588335/79fa7e45-0f9f-4e19-80c5-1c795486c84c)
+
+members Table
+
+This table captures the date a customer join the beta version of Dannys loyalty Program
+![image](https://github.com/gleidyalonzo/SQL_challenges/assets/95588335/cf205fe8-2a95-44ba-9205-056d1098b55e)
+
