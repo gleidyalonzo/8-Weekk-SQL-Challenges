@@ -278,7 +278,7 @@ WHERE
 GROUP BY 
     customer_id;
 
-
+/* 11. Join all thing Recreate the following table output using the available data */
 
 SELECT 
   a.customer_id, 
@@ -302,3 +302,5 @@ dannys_diner.members as c
 ON 
 a.customer_id = c.customer_id
 order by a.customer_id, a.order_date;
+
+/* 11. Join all thing Recreate the following table output using the available data */
