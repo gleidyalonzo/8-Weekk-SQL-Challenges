@@ -277,3 +277,28 @@ WHERE
     order_date <= '2021-01-31'
 GROUP BY 
     customer_id;
+
+
+
+SELECT 
+  a.customer_id, 
+  a.order_date,
+  b.product_name, 
+  b.price,
+  CASE
+    WHEN a.customer_id IN (SELECT customer_id 
+                           FROM dannys_diner.members 
+                           WHERE join_date <= a.order_date) THEN 'YES'
+    ELSE 'NO'
+  END AS member
+FROM 
+dannys_diner.sales AS a
+
+FULL JOIN dannys_diner.menu AS b 
+	ON a.product_id = b.product_id
+
+FULL JOIN
+dannys_diner.members as c
+ON 
+a.customer_id = c.customer_id
+order by a.customer_id, a.order_date;
