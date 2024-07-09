@@ -363,3 +363,81 @@ Results:
 
 ![image](https://github.com/gleidyalonzo/SQL_challenges/assets/95588335/c6514228-73ee-4e44-a925-abeb93a5ceef)
 
+## Bonus Questions
+
+11. Recreate the following table output using the available data
+
+![image](https://github.com/gleidyalonzo/8-Weekk-SQL-Challenges/assets/95588335/3055beaf-8474-4641-ad73-3a0cda008849)
+
+```
+SELECT 
+  a.customer_id, 
+  a.order_date,
+  b.product_name, 
+  b.price,
+  CASE
+    WHEN a.customer_id IN (SELECT customer_id 
+                           FROM dannys_diner.members 
+                           WHERE join_date <= a.order_date) THEN 'YES'
+    ELSE 'NO'
+  END AS member
+FROM 
+dannys_diner.sales AS a
+
+FULL JOIN dannys_diner.menu AS b 
+	ON a.product_id = b.product_id
+
+FULL JOIN
+dannys_diner.members as c
+ON 
+a.customer_id = c.customer_id
+order by a.customer_id, a.order_date;
+```
+
+Results:
+![image](https://github.com/gleidyalonzo/8-Weekk-SQL-Challenges/assets/95588335/456d5515-3a3a-43c7-8e31-b3f560eedda2)
+
+12. Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking for non-member purchases so he expects null ranking values for the records when customers are not yet part of the loyalty program.
+
+```
+WITH member_orders AS (
+  SELECT 
+    a.customer_id, 
+    a.order_date,
+    b.product_name, 
+    b.price,
+    CASE
+      WHEN a.customer_id IN (SELECT customer_id 
+                             FROM dannys_diner.members 
+                             WHERE join_date <= a.order_date) THEN 'YES'
+      ELSE 'NO'
+    END AS member
+  FROM 
+    dannys_diner.sales AS a
+  JOIN 
+    dannys_diner.menu AS b 
+  ON 
+    a.product_id = b.product_id
+)
+SELECT 
+  customer_id, 
+  order_date,
+  product_name, 
+  price,
+  member,
+  CASE 
+    WHEN member = 'YES' THEN 
+      DENSE_RANK() OVER (PARTITION BY customer_id, member ORDER BY order_date)
+    ELSE NULL
+  END AS ranks
+FROM 
+  member_orders
+ORDER BY 
+  customer_id,
+  order_date;
+```
+
+Results:
+
+![image](https://github.com/gleidyalonzo/8-Weekk-SQL-Challenges/assets/95588335/261a587b-f5fb-4d73-9876-64c1d8e5bab7)
+
