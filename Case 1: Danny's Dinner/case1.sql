@@ -303,4 +303,41 @@ ON
 a.customer_id = c.customer_id
 order by a.customer_id, a.order_date;
 
-/* 11. Join all thing Recreate the following table output using the available data */
+/* Danny also requires further information about the ranking of customer products, but he purposely does not need the ranking for non-member 
+purchases so he expects null ranking values for the records when customers are not yet part of the loyalty program. */
+
+WITH member_orders AS (
+  SELECT 
+    a.customer_id, 
+    a.order_date,
+    b.product_name, 
+    b.price,
+    CASE
+      WHEN a.customer_id IN (SELECT customer_id 
+                             FROM dannys_diner.members 
+                             WHERE join_date <= a.order_date) THEN 'YES'
+      ELSE 'NO'
+    END AS member
+  FROM 
+    dannys_diner.sales AS a
+  JOIN 
+    dannys_diner.menu AS b 
+  ON 
+    a.product_id = b.product_id
+)
+SELECT 
+  customer_id, 
+  order_date,
+  product_name, 
+  price,
+  member,
+  CASE 
+    WHEN member = 'YES' THEN 
+      DENSE_RANK() OVER (PARTITION BY customer_id, member ORDER BY order_date)
+    ELSE NULL
+  END AS ranks
+FROM 
+  member_orders
+ORDER BY 
+  customer_id,
+  order_date;
